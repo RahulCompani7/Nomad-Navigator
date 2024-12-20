@@ -12,11 +12,10 @@ import { Button } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
 import { Link } from "@nextui-org/link";
 import { Card } from "@nextui-org/card";
-import { CardHeader } from "@nextui-org/card";
+
 import { CardBody } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
-import { Accordion } from "@nextui-org/accordion";
-import { AccordionItem } from "@nextui-org/accordion";
+
 import {
   MapPin,
   Users,
@@ -24,7 +23,6 @@ import {
   Plane,
   Globe,
   Camera,
-  Zap,
   Compass,
 } from "lucide-react";
 import { motion, useInView } from "framer-motion";
@@ -78,16 +76,16 @@ export default function LandingPage() {
         </NavbarContent>
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          <NavbarItem>
-            <Link color="foreground" href="#features">
+          {/* <NavbarItem>
+            <Link  href="#features">
               Features
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link color="foreground" href="#about">
+            <Link href="#about">
               About
             </Link>
-          </NavbarItem>
+          </NavbarItem> */}
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
@@ -308,8 +306,7 @@ export default function LandingPage() {
           </div>
           <div className="mt-8 pt-8 border-t border-gray-300 text-center">
             <p>
-              &copy; {new Date().getFullYear()} Nomad Navigator. All rights
-              reserved.
+              &copy; {new Date().getFullYear()} Nomad Navigator. Rahul Compani
             </p>
           </div>
         </div>
