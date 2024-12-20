@@ -76,16 +76,7 @@ export default function LandingPage() {
         </NavbarContent>
 
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          {/* <NavbarItem>
-            <Link  href="#features">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link href="#about">
-              About
-            </Link>
-          </NavbarItem> */}
+         
         </NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
