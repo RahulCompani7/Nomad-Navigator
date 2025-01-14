@@ -11,7 +11,6 @@ import {
   CardBody,
   Image,
   Link,
-  Textarea,
   Tooltip,
 } from "@nextui-org/react";
 import {
@@ -21,12 +20,8 @@ import {
   Users,
   MapPin,
   Send,
-  Compass,
-  Sun,
-  Mountain,
   Coffee,
   Palmtree,
-  Building,
   Tent,
   Utensils,
 } from "lucide-react";
