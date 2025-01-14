@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Navbar } from "@nextui-org/navbar";
 import { NavbarBrand } from "@nextui-org/navbar";
 import { NavbarContent } from "@nextui-org/navbar";
@@ -12,7 +13,7 @@ import { Button } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
 import { Link } from "@nextui-org/link";
 import { Card } from "@nextui-org/card";
-
+import { NextUIProvider } from "@nextui-org/react"; // Import NextUIProvider
 import { CardBody } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 
@@ -28,6 +29,7 @@ import {
 import { motion, useInView } from "framer-motion";
 
 export default function Home() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const fadeInUp = {
@@ -75,12 +77,13 @@ export default function Home() {
           </NavbarBrand>
         </NavbarContent>
 
-        <NavbarContent className="hidden sm:flex gap-4" justify="center">
-         
-        </NavbarContent>
+        <NavbarContent
+          className="hidden sm:flex gap-4"
+          justify="center"
+        ></NavbarContent>
         <NavbarContent justify="end">
           <NavbarItem>
-            <Button as={Link} color="secondary" href="#" variant="flat">
+            <Button onPress={() => router.push("/plan-your-trip")}>
               Try Demo
             </Button>
           </NavbarItem>
@@ -112,9 +115,10 @@ export default function Home() {
               personal AI-powered travel companion.
             </p>
             <Button
-              color="secondary"
+              
               size="lg"
-              className="font-bold text-lg px-8 py-6"
+              className="font-bold text-lg px-8 py-6 bg-purple-600 text-white"
+              onPress={() => router.push("/plan-your-trip")}
             >
               Explore Now
             </Button>
