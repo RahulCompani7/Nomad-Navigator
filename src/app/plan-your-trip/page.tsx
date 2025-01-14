@@ -71,7 +71,7 @@ export default function PlanYourTrip() {
     });
   };
 
-  const calculateProgress = (updatedData: any) => {
+  const calculateProgress = (updatedData: FormData) => {
     const totalFields = Object.keys(updatedData).length;
     const filledFields = Object.values(updatedData).filter(
       (value) => value
