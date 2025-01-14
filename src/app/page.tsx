@@ -13,7 +13,6 @@ import { Button } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
 import { Link } from "@nextui-org/link";
 import { Card } from "@nextui-org/card";
-import { NextUIProvider } from "@nextui-org/react"; // Import NextUIProvider
 import { CardBody } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 

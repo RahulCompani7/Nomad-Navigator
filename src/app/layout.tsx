@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { NextUIProvider } from "@nextui-org/react"; // Import NextUIProvider
 import { Inter, Orbitron } from "next/font/google";
 import "./globals.css";

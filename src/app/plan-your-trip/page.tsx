@@ -43,6 +43,12 @@ import {
 } from "@react-google-maps/api";
 import { types } from "util";
 import { useToast } from "@/hooks/use-toast";
+interface FormData {
+  destination: string;
+  duration: string;
+  budget: string;
+  companions: string;
+}
 
 export default function PlanYourTrip() {
   const [progress, setProgress] = useState(0);
@@ -56,7 +62,7 @@ export default function PlanYourTrip() {
 
   const inputRef = useRef<any>(null);
 
-  const [formData, setFormData] = useState<any>({
+  const [formData, setFormData] = useState<FormData>({
     destination: "",
     duration: "",
     budget: "",
@@ -150,13 +156,8 @@ export default function PlanYourTrip() {
 
       const addressComponents = place.address_components;
 
-      // Extract city and country
-      let city = "";
       let country = "";
       addressComponents.forEach((component: any) => {
-        if (component.types.includes("locality")) {
-          city = component.long_name;
-        }
         if (component.types.includes("country")) {
           country = component.long_name;
         }
@@ -227,7 +228,7 @@ export default function PlanYourTrip() {
             </h1>
             <div className="text-xl mb-8 text-gray-600 max-w-3xl mx-auto">
               Let our AI travel wizard conjure up the journey of your dreams.
-              Tell us about your ideal getaway, and we'll weave together an
+              Tell us about your ideal getaway, and we&apos;ll weave together an
               unforgettable experience tailored just for you.
             </div>
           </div>
@@ -308,8 +309,8 @@ export default function PlanYourTrip() {
                   }
                 />
                 <div className="mt-2 text-sm text-gray-500">
-                  Whether it's a quick escape or an extended journey, we've got
-                  you covered.
+                  Whether it&apos;s a quick escape or an extended journey,
+                  we&apos;ve got you covered.
                 </div>
               </CardBody>
             </Card>
@@ -344,7 +345,8 @@ export default function PlanYourTrip() {
                   ))}
                 </div>
                 <div className="mt-2 text-sm text-gray-500">
-                  From thrifty to lavish, we'll tailor your trip to your pocket.
+                  From thrifty to lavish, we&apos;ll tailor your trip to your
+                  pocket.
                 </div>
               </CardBody>
             </Card>
@@ -381,8 +383,8 @@ export default function PlanYourTrip() {
                   ))}
                 </div>
                 <div className="mt-2 text-sm text-gray-500">
-                  Solo explorer or group adventurer? We'll craft the perfect
-                  social setting.
+                  Solo explorer or group adventurer? We&apos;ll craft the
+                  perfect social setting.
                 </div>
               </CardBody>
             </Card>
@@ -401,7 +403,7 @@ export default function PlanYourTrip() {
               Create My Adventure
             </Button>
             <div className="mt-4 text-sm text-gray-500">
-              Get ready for an AI-crafted journey that's uniquely yours!
+              Get ready for an AI-crafted journey that&apos;s uniquely yours!
             </div>
           </div>
         </AnimatedSection>
