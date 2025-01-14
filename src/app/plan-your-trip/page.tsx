@@ -27,16 +27,14 @@ import {
 } from "lucide-react";
 import { Input } from "@nextui-org/input";
 import { motion, useInView } from "framer-motion";
-import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+
 import { IoIosArrowBack } from "react-icons/io";
 import { Progress } from "@nextui-org/progress";
 
 import {
-  GoogleMap,
   useJsApiLoader,
   StandaloneSearchBox,
 } from "@react-google-maps/api";
-import { types } from "util";
 import { useToast } from "@/hooks/use-toast";
 interface FormData {
   destination: string;
@@ -63,10 +61,10 @@ export default function PlanYourTrip() {
     budget: "",
     companions: "",
   });
-  const [destination, setDestination] = useState<any>("");
+
 
   const handleInputChange = (name: string, value: string) => {
-    setFormData((prev: any) => {
+    setFormData((prev: FormData) => {
       const updatedData = { ...prev, [name]: value };
       calculateProgress(updatedData); // Update progress after every change
       return updatedData;
@@ -159,7 +157,7 @@ export default function PlanYourTrip() {
       });
 
       const locationName = place.name || place.formatted_address; // Get place name or address
-      setFormData((prev: any) => ({
+      setFormData((prev: FormData) => ({
         ...prev,
         destination: locationName + ", " + country,
       }));
