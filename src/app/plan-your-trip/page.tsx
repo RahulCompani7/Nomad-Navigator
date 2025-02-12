@@ -27,15 +27,17 @@ import {
 } from "lucide-react";
 import { Input } from "@nextui-org/input";
 import { motion, useInView } from "framer-motion";
-
+import { useRouter } from "next/navigation";
 import { IoIosArrowBack } from "react-icons/io";
 import { Progress } from "@nextui-org/progress";
+import TripItinerary from "@/components/tripIternary";
 
 import {
   useJsApiLoader,
   StandaloneSearchBox,
 } from "@react-google-maps/api";
 import { useToast } from "@/hooks/use-toast";
+import { chatSession } from "@/service/AiModal";
 interface FormData {
   destination: string;
   duration: string;
@@ -45,6 +47,7 @@ interface FormData {
 
 export default function PlanYourTrip() {
   const [progress, setProgress] = useState(0);
+    const router = useRouter();
 
   const { toast } = useToast();
   const { isLoaded } = useJsApiLoader({
@@ -61,6 +64,9 @@ export default function PlanYourTrip() {
     budget: "",
     companions: "",
   });
+
+  const [tripData, setTripData] = useState<any>();
+  const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
 
   const handleInputChange = (name: string, value: string) => {
@@ -165,33 +171,56 @@ export default function PlanYourTrip() {
     }
   };
 
-  const submitData = () => {
+  const submitData = async () => {
     const { destination, duration, budget, companions } = formData;
-
-    // Check for empty fields
+  
     if (!destination || !duration || !budget || !companions) {
       toast({
         title: "Incomplete Form",
         description: "Please fill in all the fields before proceeding.",
-        variant: "destructive", // Red colored toast
+        variant: "destructive",
       });
       return;
     }
-
-    // Show success toast
+  
     toast({
       title: "Generating Itinerary",
       description: "Please wait while we prepare your adventure.",
     });
-
+  
     console.log("Form Data Submitted:", formData);
-    // Proceed with form submission logic
+  
+    const finalPrompt = `Generate Travel Plan for Location: ${destination}, for ${duration} Days for ${companions} with a ${budget} budget, Give me a Hotel options(hotelOptions) list with HotelName, Hotel address, Price, hotel image url, geo coordinates, rating, descriptions and suggest itinerary(itinerary) with places along with placeName, Place Details, Place Image Url, Geo Coordinates, ticket Pricing, Time to travel each of the locations for 3 days with each day plan with best time to visit in JSON format. remove comment lines in JSON, include notes at the end`;
+  
+    console.log(finalPrompt);
+  
+    try {
+      const result = await chatSession.sendMessage(finalPrompt);
+      const textResponse = await result?.response?.text(); // Wait for the response text
+  
+      console.log("Fetched Data:", textResponse);
+  
+      if (textResponse) {
+        setTripData(JSON.parse(textResponse)); // Parse JSON if it's a valid response
+        setIsSubmit(true);
+      } else {
+        console.error("Error: Empty response");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      toast({
+        title: "Error",
+        description: "Failed to generate the itinerary. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-purple-50 text-gray-800">
       <Navbar className="bg-white/70 backdrop-blur-md" maxWidth="xl">
-        <NavbarBrand>
+        <NavbarBrand onClick={() => router.push("/")} className="cursor-pointer">
           <Plane className="h-8 w-8 text-purple-600 mr-2" />
           <div className="font-bold text-inherit text-purple-600">
             Nomad Navigator
@@ -400,6 +429,8 @@ export default function PlanYourTrip() {
             </div>
           </div>
         </AnimatedSection>
+
+        <TripItinerary tripData = {tripData} isSubmit={isSubmit}/>
 
         <AnimatedSection>
           <div className="mt-16">

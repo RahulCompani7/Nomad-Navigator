@@ -68,7 +68,7 @@ export default function Home() {
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             className="sm:hidden"
           />
-          <NavbarBrand>
+          <NavbarBrand onClick={() => router.push("/")} className="cursor-pointer">
             <Plane className="h-8 w-8 text-purple-600 mr-2" />
             <p className="font-bold text-inherit text-purple-600">
               Nomad Navigator

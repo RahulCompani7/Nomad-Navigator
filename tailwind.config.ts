@@ -1,3 +1,4 @@
+import {heroui} from '@heroui/theme';
 import {nextui} from '@nextui-org/theme';
 import type { Config } from "tailwindcss";
 
@@ -7,7 +8,8 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(button|card|divider|image|input|navbar|progress|ripple|spinner|form).js"
+    "./node_modules/@nextui-org/theme/dist/components/(button|card|divider|image|input|navbar|progress|ripple|spinner|form).js",
+    "./node_modules/@heroui/theme/dist/components/(card|ripple).js"
   ],
   theme: {
   	extend: {
@@ -57,5 +59,5 @@ export default {
   		}
   	}
   },
-  plugins: [nextui(), require("tailwindcss-animate")],
+  plugins: [nextui(),require("tailwindcss-animate"),heroui()],
 } satisfies Config;
