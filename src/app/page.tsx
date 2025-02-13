@@ -24,6 +24,7 @@ import {
   Globe,
   Camera,
   Compass,
+  ThermometerSun
 } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 
@@ -170,12 +171,7 @@ export default function Home() {
                 description:
                   "Craft the perfect trip with our intelligent planning assistant.",
               },
-              {
-                icon: Users,
-                title: "Collaborative Adventures",
-                description:
-                  "Plan and sync with friends in real-time, anywhere in the world.",
-              },
+              
               {
                 icon: Wallet,
                 title: "Smart Budgeting",
@@ -183,11 +179,17 @@ export default function Home() {
                   "Keep your finances in check with our intuitive expense tracker.",
               },
               {
-                icon: Camera,
-                title: "Capture Memories",
+                icon: ThermometerSun,
+                title: "Climate Check",
                 description:
-                  "Integrate and organize your travel photos seamlessly.",
+                  "Monitor and analyze climate patterns with real-time data insights.",
               },
+              {
+                icon: Plane,
+                title: "Flights Check",
+                description: "Easily track flight prices and get notified about the best deals."
+              },
+              
               {
                 icon: MapPin,
                 title: "Off-the-beaten-path",
@@ -215,6 +217,75 @@ export default function Home() {
             ))}
           </motion.div>
         </div>
+
+        <Divider className="my-20 bg-purple-200" />
+
+         <AnimatedSection>
+                  <div className="mt-16">
+                    <h2 className="text-3xl font-bold mb-6 text-center text-purple-600">
+                      Why Plan with Nomad Navigator?
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                      <Card className="bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 transform hover:scale-105">
+                        <CardBody className="p-6 text-center">
+                        <div className="w-full flex justify-center items-center"> <Image
+                            src="https://img.icons8.com/fluency/96/000000/artificial-intelligence.png"
+                            alt="AI-Powered"
+                            width={64}
+                            height={64}
+                            className="mx-auto mb-4"
+                          /></div>
+                          
+                          <h3 className="text-xl font-bold mb-2 text-purple-600">
+                            AI-Powered Insights
+                          </h3>
+                          <div className="text-gray-600">
+                            Our advanced AI analyzes countless travel data points to
+                            create a truly personalized itinerary.
+                          </div>
+                        </CardBody>
+                      </Card>
+                      <Card className="bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 transform hover:scale-105">
+                        <CardBody className="p-6 text-center">
+                        <div className="w-full flex justify-center items-center"> <Image
+                            src="https://img.icons8.com/?size=100&id=LBvXB546XHAT&format=png&color=000000"
+                            alt="Time-Saving"
+                            width={64}
+                            height={64}
+                            className="mx-auto mb-4"
+                          /></div>
+                          
+                          <h3 className="text-xl font-bold mb-2 text-purple-600">
+                            Tailored to You
+                          </h3>
+                          <div className="text-gray-600">
+                            Every suggestion is curated to match your unique preferences
+                            and travel style.
+                          </div>
+                        </CardBody>
+                      </Card>
+                      <Card className="bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 transform hover:scale-105">
+                        <CardBody className="p-6 text-center">
+                          <div className="w-full flex justify-center items-center"> <Image
+                            src="https://img.icons8.com/fluency/96/000000/clock.png"
+                            alt="Time-Saving"
+                            width={64}
+                            height={64}
+                            className="mx-auto mb-4"
+                          /></div>
+                         
+                          <h3 className="text-xl font-bold mb-2 text-purple-600">
+                            Save Time, Not Thrills
+                          </h3>
+                          <div className="text-gray-600">
+                            Skip hours of research. Get a comprehensive plan in minutes,
+                            leaving more time for adventure.
+                          </div>
+                        </CardBody>
+                      </Card>
+                    </div>
+                  </div>
+                </AnimatedSection>
 
         <Divider className="my-20 bg-purple-200" />
 
@@ -281,27 +352,27 @@ export default function Home() {
               <h3 className="text-xl font-bold mb-4 text-purple-600">
                 Nomad Navigator
               </h3>
-              <p>
+              <div>
                 A personal project showcasing AI-powered travel planning and
                 seamless user experience.
-              </p>
+              </div>
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4 text-purple-600">
                 Connect With Me
               </h3>
-              <p className="mb-4">
+              <div className="mb-4">
                 Interested in collaborating or learning more about this project?
-              </p>
+              </div>
               <Button as={Link} color="secondary" href="#" variant="flat">
                 Contact Me
               </Button>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-gray-300 text-center">
-            <p>
+            <div>
               &copy; {new Date().getFullYear()} Nomad Navigator. Rahul Compani
-            </p>
+            </div>
           </div>
         </div>
       </footer>

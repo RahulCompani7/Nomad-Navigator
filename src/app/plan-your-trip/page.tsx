@@ -46,6 +46,8 @@ interface FormData {
 }
 
 export default function PlanYourTrip() {
+  const iternaryRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
     const router = useRouter();
 
@@ -190,8 +192,9 @@ export default function PlanYourTrip() {
   
     console.log("Form Data Submitted:", formData);
   
-    const finalPrompt = `Generate Travel Plan for Location: ${destination}, for ${duration} Days for ${companions} with a ${budget} budget, Give me a Hotel options(hotelOptions) list with HotelName, Hotel address, Price, hotel image url, geo coordinates, rating, descriptions and suggest itinerary(itinerary) with places along with placeName, Place Details, Place Image Url, Geo Coordinates, ticket Pricing, Time to travel each of the locations for 3 days with each day plan with best time to visit in JSON format. remove comment lines in JSON, include notes at the end`;
-  
+
+    const finalPrompt = `Generate a detailed ${duration}-day travel plan for ${destination} with a ${budget} budget, traveling with ${companions}. Provide hotel options (hotelOptions) with name, address, price range, image URL, geo-coordinates, rating, and description. Include a ${duration}-day itinerary (itinerary) with daily themes, best time to visit, and activities listing place name, details, image URL, geo-coordinates, ticket pricing, and travel time. Add general travel notes at the end. Format the response strictly as JSON without comments. Ensure strict JSON formatting with no extra commas or misplaced brackets.`;
+
     console.log(finalPrompt);
   
     try {
@@ -203,6 +206,9 @@ export default function PlanYourTrip() {
       if (textResponse) {
         setTripData(JSON.parse(textResponse)); // Parse JSON if it's a valid response
         setIsSubmit(true);
+        setTimeout(() => {
+          iternaryRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 600);
       } else {
         console.error("Error: Empty response");
       }
@@ -214,6 +220,21 @@ export default function PlanYourTrip() {
         variant: "destructive",
       });
     }
+  };
+
+  const tryAgainClick =  () => {
+    setTimeout(() => {
+      mainRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 0);
+    setTripData(null);
+    setFormData({
+      destination: "",
+      duration: "",
+      budget: "",
+      companions: "",
+    });
+    setIsSubmit(false);
+
   };
   
 
@@ -248,7 +269,7 @@ export default function PlanYourTrip() {
             <h1 className="text-5xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 font-futuristic">
               Craft Your Perfect Adventure
             </h1>
-            <div className="text-xl mb-8 text-gray-600 max-w-3xl mx-auto">
+            <div className="text-xl mb-8 text-gray-600 max-w-3xl mx-auto" ref={mainRef}>
               Let our AI travel wizard conjure up the journey of your dreams.
               Tell us about your ideal getaway, and we&apos;ll weave together an
               unforgettable experience tailored just for you.
@@ -264,6 +285,7 @@ export default function PlanYourTrip() {
             indicator: "bg-gradient-to-r from-purple-500 to-pink-500",
           }}
           size="lg"
+          
         />
 
         <motion.div
@@ -271,6 +293,7 @@ export default function PlanYourTrip() {
           variants={staggerChildren}
           initial="hidden"
           animate="visible"
+          
         >
           <motion.div variants={fadeInUp}>
             <Card className="bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 transform hover:scale-105">
@@ -430,71 +453,12 @@ export default function PlanYourTrip() {
           </div>
         </AnimatedSection>
 
-        <TripItinerary tripData = {tripData} isSubmit={isSubmit}/>
+   
+        <div ref={iternaryRef}>
+        <TripItinerary tripData = {tripData} isSubmit={isSubmit} tryAgainClick={tryAgainClick}/>
+      </div>
 
-        <AnimatedSection>
-          <div className="mt-16">
-            <h2 className="text-3xl font-bold mb-6 text-center text-purple-600">
-              Why Plan with Nomad Navigator?
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <Card className="bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 transform hover:scale-105">
-                <CardBody className="p-6 text-center">
-                  <Image
-                    src="https://img.icons8.com/fluency/96/000000/artificial-intelligence.png"
-                    alt="AI-Powered"
-                    width={64}
-                    height={64}
-                    className="mx-auto mb-4"
-                  />
-                  <h3 className="text-xl font-bold mb-2 text-purple-600">
-                    AI-Powered Insights
-                  </h3>
-                  <div className="text-gray-600">
-                    Our advanced AI analyzes countless travel data points to
-                    create a truly personalized itinerary.
-                  </div>
-                </CardBody>
-              </Card>
-              <Card className="bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 transform hover:scale-105">
-                <CardBody className="p-6 text-center">
-                  <Image
-                    src="https://img.icons8.com/fluency/96/000000/customize.png"
-                    alt="Customization"
-                    width={64}
-                    height={64}
-                    className="mx-auto mb-4"
-                  />
-                  <h3 className="text-xl font-bold mb-2 text-purple-600">
-                    Tailored to You
-                  </h3>
-                  <div className="text-gray-600">
-                    Every suggestion is curated to match your unique preferences
-                    and travel style.
-                  </div>
-                </CardBody>
-              </Card>
-              <Card className="bg-white border border-purple-200 hover:border-purple-400 transition-all duration-300 transform hover:scale-105">
-                <CardBody className="p-6 text-center">
-                  <Image
-                    src="https://img.icons8.com/fluency/96/000000/clock.png"
-                    alt="Time-Saving"
-                    width={64}
-                    height={64}
-                    className="mx-auto mb-4"
-                  />
-                  <h3 className="text-xl font-bold mb-2 text-purple-600">
-                    Save Time, Not Thrills
-                  </h3>
-                  <div className="text-gray-600">
-                    Skip hours of research. Get a comprehensive plan in minutes,
-                    leaving more time for adventure.
-                  </div>
-                </CardBody>
-              </Card>
-            </div>
-          </div>
-        </AnimatedSection>
+       
       </main>
 
       <footer className="bg-purple-100 text-gray-600 py-8 mt-12">

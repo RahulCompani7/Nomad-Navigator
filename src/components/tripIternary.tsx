@@ -34,7 +34,7 @@ type TripData = {
     [key: string]: {
       theme: string;
       bestTimeToVisit: string;
-      places: {
+      activities: {
         placeName: string;
         placeImageUrl: string;
         placeDetails: string;
@@ -46,9 +46,10 @@ type TripData = {
   notes: string[];
 };
 
-const TripItinerary: React.FC<{ tripData: TripData; isSubmit: boolean }> = ({
+const TripItinerary: React.FC<{ tripData: TripData; isSubmit: boolean; tryAgainClick: ()=> void; }> = ({
   tripData,
   isSubmit,
+  tryAgainClick,
 }) => {
   const [updatedTripData, setUpdatedTripData] = useState(tripData);
   const [locationPhotoURL, setLocationPhotoURL] = useState<string>("");
@@ -74,7 +75,7 @@ const TripItinerary: React.FC<{ tripData: TripData; isSubmit: boolean }> = ({
             return `https://places.googleapis.com/v1/${photoName}/media?maxHeightPx=400&maxWidthPx=800&key=AIzaSyAn9boxE_fb3x0d3heoR34ZtNrjUghDq4g`
           }
         }
-        throw new Error('No photo available');
+        return "";
       } catch (error) {
         console.error("Error fetching photo:", error);
         return `/placeholder.svg?height=400&width=400&text=${encodeURIComponent(name)}`;
@@ -85,27 +86,28 @@ const TripItinerary: React.FC<{ tripData: TripData; isSubmit: boolean }> = ({
     setLocationPhotoURL(locationPhoto);
 
     const hotelOptionsWithPhotos = await Promise.all(
-      tripData?.hotelOptions?.map(async (hotel) => {
+      (tripData?.hotelOptions || []).map(async (hotel) => {
         const hotelPhoto = await getPhotos(`${hotel.hotelName}, ${tripData.location}`);
         return { ...hotel, hotelImageUrl: hotelPhoto };
       })
     );
+    
 
     const itineraryWithPhotos = Object.fromEntries(
       await Promise.all(
-        Object.entries(tripData.itinerary).map(async ([day, details]) => {
+        Object.entries(tripData?.itinerary || {}).map(async ([day, details]) => {
           const activitiesWithPhotos = await Promise.all(
-            details.places.map(async (place) => {
-              const placePhoto = await getPhotos(`${place.placeName}, ${tripData.location}`);
+            (details?.activities || []).map(async (place) => {
+              const placePhoto = await getPhotos(`${place.placeName}, ${tripData?.location}`);
               console.log(placePhoto);
               return { ...place, placeImageUrl: placePhoto };
-
             })
           );
-          return [day, { ...details, places: activitiesWithPhotos }];
+          return [day, { ...details, activities: activitiesWithPhotos }];
         })
       )
     );
+    
 
     setUpdatedTripData({
       ...tripData,
@@ -118,7 +120,7 @@ const TripItinerary: React.FC<{ tripData: TripData; isSubmit: boolean }> = ({
   if (!isSubmit || !updatedTripData) return null;
 
   return (
-    <Card className="w-full max-w-7xl mx-auto my-8 overflow-hidden bg-gradient-to-br from-purple-50 to-pink-50 md:mx-6">
+    <Card className="w-full max-w-7xl mx-auto my-8 overflow-hidden bg-gradient-to-br from-purple-50 to-pink-50 ">
       <CardBody className="p-0">
         {isLoading ? (
           <div className="flex justify-center items-center h-96">
@@ -141,12 +143,12 @@ const TripItinerary: React.FC<{ tripData: TripData; isSubmit: boolean }> = ({
     className="w-full h-full object-cover"
   />
   <div className="absolute inset-0" />
-  <div className="absolute bottom-0 left-0 p-3 text-white z-[100] bg-pink-50">
+  <div className="absolute bottom-0 left-0 p-3 text-white z-[100] bg-pink-50 rounded-xl m-2">
     <motion.h1
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.2 }}
-      className="text-4xl md:text-5xl font-bold mb-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"
+      className="text-4xl md:text-5xl font-bold mb-1 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 "
     >
       {updatedTripData.location}
     </motion.h1>
@@ -183,41 +185,42 @@ const TripItinerary: React.FC<{ tripData: TripData; isSubmit: boolean }> = ({
               <div className="px-8">
                 <h2 className="text-2xl font-bold mb-4 text-purple-700">Hotel Options</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {updatedTripData.hotelOptions.map((hotel, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                    >
-                      <Card className="hover:shadow-lg transition-shadow duration-300">
-                        <Image
-                          src={hotel.hotelImageUrl || "/placeholder.svg"}
-                          alt={hotel.hotelName}
-                          className="w-full h-48 object-cover"
-                          width={500} // Define the width
-  height={300} // Define the height
-                          
-                        />
-                        <CardBody className="p-4">
-                          <h3 className="text-xl font-semibold mb-2 text-purple-600">{hotel.hotelName}</h3>
-                          <p className="text-sm text-gray-600 mb-2">{hotel.description}</p>
-                          <p className="text-sm"><strong>Address:</strong> {hotel.hotelAddress}</p>
-                          <p className="text-sm">
-                            <strong>Price Range:</strong> {hotel.priceRange.low} - {hotel.priceRange.high} {updatedTripData.currency}
-                          </p>
-                          <p className="text-sm"><strong>Rating:</strong> {hotel.rating} ⭐</p>
-                          <Button
-                            className="mt-4 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white"
-                            onPress={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.hotelName + ' ' + hotel.hotelAddress)}`, "_blank")}
-                          >
-                            View on Map
-                          </Button>
-                        </CardBody>
-                      </Card>
-                    </motion.div>
-                  ))}
-                </div>
+  {updatedTripData.hotelOptions.map((hotel, index) => (
+    <motion.div
+      key={index}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="h-full"
+    >
+      <Card className="hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
+        <Image
+          src={hotel.hotelImageUrl || "/placeholder.svg"}
+          alt={hotel.hotelName}
+          className="w-full h-48 object-cover rounded-none"
+          width={500}
+          height={300}
+        />
+        <CardBody className="p-4 flex-grow flex flex-col">
+          <h3 className="text-xl font-semibold mb-2 text-purple-600">{hotel.hotelName}</h3>
+          <p className="text-sm text-gray-600 mb-2 flex-grow">{hotel.description}</p>
+          <p className="text-sm"><strong>Address:</strong> {hotel.hotelAddress}</p>
+          <p className="text-sm">
+            <strong>Price Range:</strong> {hotel.priceRange.low} - {hotel.priceRange.high} {updatedTripData.currency}
+          </p>
+          <p className="text-sm"><strong>Rating:</strong> {hotel.rating} ⭐</p>
+          <Button
+            className="mt-4 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+            onPress={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.hotelName + ' ' + hotel.hotelAddress)}`, "_blank")}
+          >
+            View on Map
+          </Button>
+        </CardBody>
+      </Card>
+    </motion.div>
+  ))}
+</div>
+
               </div>
 
               <div className="px-8">
@@ -231,21 +234,24 @@ const TripItinerary: React.FC<{ tripData: TripData; isSubmit: boolean }> = ({
                   >
                     <Card className="mb-6 overflow-hidden">
                       <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4">
-                        <h3 className="text-xl font-semibold">Day {index+1}: {details.theme}</h3>
+                        <h3 className="text-xl font-semibold">Day {index+1
+                          
+                          }: {details.theme}</h3>
                       </CardHeader>
                       <CardBody className="p-4">
                         <p className="mb-4"><strong>Best Time to Visit:</strong> {details.bestTimeToVisit}</p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {details.places.map((place, idx) => (
+                          {details.activities.map((place, idx) => (
                             <Card key={idx} className="hover:shadow-md transition-shadow duration-300">
-                              <Image
+                              <div className="flex justify-center items-center w-full mt-2"> <Image
                                 src={place.placeImageUrl || "/placeholder.svg"}
                                 alt={place.placeName}
                                 className="w-full h-48 object-cover"
                                 width={500} // Define the width
   height={300} // Define the height
                                 
-                              />
+                              /></div>
+                             
                               <CardBody className="p-4">
                                 <h4 className="text-lg font-semibold mb-2 text-purple-600">{place.placeName}</h4>
                                 <p className="text-sm text-gray-600 mb-2">{place.placeDetails}</p>
@@ -285,6 +291,20 @@ const TripItinerary: React.FC<{ tripData: TripData; isSubmit: boolean }> = ({
           </AnimatePresence>
         )}
       </CardBody>
+      <div className=" flex m-4 mx-6 justify-end ">
+      <Button
+              
+              color="secondary"
+              className="bg-purple-400 text-white"
+              onPress={tryAgainClick}
+              variant="flat"
+            >
+              Try Again
+              
+            </Button>
+      </div>
+     
+      
     </Card>
   );
 };
